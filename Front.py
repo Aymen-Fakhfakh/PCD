@@ -6,6 +6,8 @@ from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.events import DoubleTap 
 from PIL import Image
+import sqlite3
+import subprocess
 
 st.set_page_config(page_title="Emotional recognitation", layout="wide")
 container_1=st.container()
@@ -47,25 +49,38 @@ with container_1:
     #col1.image(image, caption='Mah boy')
 
 def authenticate(username, password):
-    # Replace with your own authentication logic
-    if username == "user" and password == "password":
+    conn = sqlite3.connect('userdb.db')
+    c = conn.cursor()
+    c.execute("SELECT password FROM users WHERE username=?", (username,))
+    result = c.fetchone()
+    if result is not None and result[0] == password:
         return True
     else:
         return False
 
 def main():
     
+   
     # Get user credentials
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
+    
 
     # Authenticate user
     if st.sidebar.button("Login"):
+        
+        
+
         if authenticate(username, password):
             st.success("Logged in as {}".format(username))
+            subprocess.Popen(["streamlit", "run", "C:/Users/Lenovo/Desktop/PCD/WEB/Second.py"])
+
             # Add your code to redirect to another page here
         else:
-            st.error("Incorrect username or password")
+            st.error("Incorrect username or password! Need to sign in first maybe")
+    
+    if st.sidebar.button('Sing In'):
+        subprocess.Popen(["streamlit","run","C:/Users/Lenovo/Desktop/PCD/WEB/Signup.py"])
 
 if __name__ == "__main__":
     main()

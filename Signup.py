@@ -1,5 +1,6 @@
 import streamlit as st
 import sqlite3
+import subprocess
 
 conn = sqlite3.connect("user_data.db")
 c = conn.cursor()
@@ -28,7 +29,7 @@ def main():
     if password != verify_password:
         
         st.error("Passwords do not match. Please enter the same password again.")
-    return
+        return
     if first_name == None or last_name == None:
         st.error("This field must'nt bee empty ")
 
@@ -37,7 +38,7 @@ def main():
         c.execute("INSERT INTO users (first_name, last_name, email, username, password) VALUES (?, ?, ?, ?, ?)", (first_name, last_name, email, username, password))
         conn.commit()
         st.success("User information saved to database.")
-
+        subprocess.Popen(['streamlit','run','C:/Users/Lenovo/Documents/GitHub/PCD/Font.py'])
 if __name__ == "__main__":
     main()
    
